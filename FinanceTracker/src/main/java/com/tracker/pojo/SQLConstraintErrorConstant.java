@@ -1,15 +1,15 @@
 package com.tracker.pojo;
 
-public enum SQLConstraint {
+import lombok.Getter;
+
+@Getter
+public enum SQLConstraintErrorConstant {
     USER_EMAIL_UK("User.email");
 
     private final String key;
 
-    SQLConstraint(String key) {
+    SQLConstraintErrorConstant(String key) {
         this.key = key;
     }
 
-    public String getKey() {
-        return key;
-    }
 }

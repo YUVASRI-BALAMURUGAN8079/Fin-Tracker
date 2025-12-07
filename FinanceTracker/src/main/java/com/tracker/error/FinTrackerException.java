@@ -4,20 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FinTrackerException extends RuntimeException {
-    private final ApiErrorInfo info;
+    private final ErrorMessages info;
     private Map<String, Object> data;
 
-    public FinTrackerException(ApiErrorInfo info) {
+    public FinTrackerException(ErrorMessages info) {
         super(info.getMessage());
         this.info = info;
     }
 
-    public FinTrackerException(ApiErrorInfo info, Throwable cause) {
+    public FinTrackerException(ErrorMessages info, Throwable cause) {
         super(info.getMessage(), cause);
         this.info = info;
     }
 
-    public FinTrackerException(ApiErrorInfo info, Map<String, Object> data) {
+    public FinTrackerException(ErrorMessages info, Map<String, Object> data) {
         super(info.getMessage());
         this.info = info;
         this.data = data;
@@ -25,13 +25,13 @@ public class FinTrackerException extends RuntimeException {
 
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put(AppConstants.ERROR_CODE, info.getErrorCode());
-        map.put(AppConstants.ERROR_MESSAGE, info.getMessage());
-        map.put(AppConstants.DATA, data);
+        map.put(ReusableConstants.ERROR_CODE, info.getErrorCode());
+        map.put(ReusableConstants.ERROR_MESSAGE, info.getMessage());
+        map.put(ReusableConstants.DATA, data);
         return map;
     }
 
-    public ApiErrorInfo getInfo() {
+    public ErrorMessages getInfo() {
         return info;
     }
 

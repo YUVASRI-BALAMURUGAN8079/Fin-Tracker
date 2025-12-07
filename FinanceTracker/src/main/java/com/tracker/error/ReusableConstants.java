@@ -1,6 +1,6 @@
 package com.tracker.error;
 
-public class AppConstants {
+public class ReusableConstants {
 
     static final String ERROR = "error";
     static final String ERROR_CODE = "errorCode";

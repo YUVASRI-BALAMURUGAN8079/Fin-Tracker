@@ -2,7 +2,7 @@ package com.tracker.service;
 
 import com.tracker.DTO.PaymentMethodDTO;
 import com.tracker.entity.PaymentMethod;
-import com.tracker.error.AppConstants;
+import com.tracker.error.ReusableConstants;
 import com.tracker.error.ErrorConstants;
 import com.tracker.error.FinTrackerException;
 import com.tracker.repo.PaymentMethodRepo;
@@ -30,7 +30,7 @@ public class PaymentMethodService {
     public PaymentMethodDTO createPaymentMethod(Long userId,Map<String, ?> input) {
         PaymentMethod paymentMethod = modelMapper.map(input,PaymentMethod.class);
         paymentMethod.setPaymentMethodId(idGenerator.nextId());
-        paymentMethod.setType((String) input.get(AppConstants.TYPE));
+        paymentMethod.setType((String) input.get(ReusableConstants.TYPE));
         paymentMethod.setUserId(userId);
         paymentMethod.setCreatedTime(LocalDateTime.now(ZoneOffset.UTC));
         return handleDTO(paymentMethodRepo.save(paymentMethod));
@@ -41,8 +41,8 @@ public class PaymentMethodService {
         if (paymentMethod == null) {
             throw new FinTrackerException(ErrorConstants.INVALID_INPUT);
         }
-        if (input.containsKey(AppConstants.TYPE)) {
-            paymentMethod.setType(input.get(AppConstants.TYPE).toString());
+        if (input.containsKey(ReusableConstants.TYPE)) {
+            paymentMethod.setType(input.get(ReusableConstants.TYPE).toString());
         }
 
         paymentMethod.setUpdatedTime(LocalDateTime.now(ZoneOffset.UTC));

@@ -2,7 +2,7 @@ package com.tracker.service;
 
 import com.tracker.DTO.CategoryDTO;
 import com.tracker.entity.Category;
-import com.tracker.error.AppConstants;
+import com.tracker.error.ReusableConstants;
 import com.tracker.error.ErrorConstants;
 import com.tracker.error.FinTrackerException;
 import com.tracker.repo.CategoryRepo;
@@ -42,9 +42,9 @@ public class CategoryService {
 
         if (category == null) throw new FinTrackerException(ErrorConstants.INVALID_INPUT);
 
-        if (input.containsKey(AppConstants.NAME)) category.setName(input.get(AppConstants.NAME).toString());
-        if (input.containsKey(AppConstants.DESCRIPTION)) category.setDescription(input.get(AppConstants.DESCRIPTION).toString());
-        if(input.containsKey(AppConstants.MONTHLY_LIMIT)) category.setCurrentMonthlyLimit(Long.valueOf(input.get(AppConstants.MONTHLY_LIMIT).toString()));
+        if (input.containsKey(ReusableConstants.NAME)) category.setName(input.get(ReusableConstants.NAME).toString());
+        if (input.containsKey(ReusableConstants.DESCRIPTION)) category.setDescription(input.get(ReusableConstants.DESCRIPTION).toString());
+        if(input.containsKey(ReusableConstants.MONTHLY_LIMIT)) category.setCurrentMonthlyLimit(Long.valueOf(input.get(ReusableConstants.MONTHLY_LIMIT).toString()));
 
         category.setUpdatedTime(LocalDateTime.now(ZoneOffset.UTC));
 

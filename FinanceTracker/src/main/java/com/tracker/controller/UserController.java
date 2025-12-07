@@ -3,10 +3,10 @@ package com.tracker.controller;
 
 import com.tracker.entity.User;
 import com.tracker.entity.UserSession;
-import com.tracker.error.AppConstants;
+import com.tracker.error.ReusableConstants;
 import com.tracker.error.ErrorConstants;
 import com.tracker.error.FinTrackerException;
-import com.tracker.pojo.SQLConstraint;
+import com.tracker.pojo.SQLConstraintErrorConstant;
 import com.tracker.repo.SessionRepo;
 import com.tracker.repo.UserRepo;
 import jakarta.servlet.http.Cookie;
@@ -59,13 +59,13 @@ public class UserController {
             userRepo.save(user);
 
             // populating demo data for category
-            jooqContext.insertInto(table(AppConstants.CATEGORY_ENTITY))
+            jooqContext.insertInto(table(ReusableConstants.CATEGORY_ENTITY))
                     .columns(
-                            field(AppConstants.CATEGORY_ID),
-                            field(AppConstants.USER_ID),
-                            field(AppConstants.NAME),
-                            field(AppConstants.DESCRIPTION),
-                            field(AppConstants.CREATED_TIME)
+                            field(ReusableConstants.CATEGORY_ID),
+                            field(ReusableConstants.USER_ID),
+                            field(ReusableConstants.NAME),
+                            field(ReusableConstants.DESCRIPTION),
+                            field(ReusableConstants.CREATED_TIME)
                     )
                     .values(
                         idGenerator.nextId(),
@@ -76,13 +76,13 @@ public class UserController {
                     )
                     .execute();
 
-            jooqContext.insertInto(table(AppConstants.CATEGORY_ENTITY))
+            jooqContext.insertInto(table(ReusableConstants.CATEGORY_ENTITY))
                     .columns(
-                            field(AppConstants.CATEGORY_ID),
-                            field(AppConstants.USER_ID),
-                            field(AppConstants.NAME),
-                            field(AppConstants.DESCRIPTION),
-                            field(AppConstants.CREATED_TIME)
+                            field(ReusableConstants.CATEGORY_ID),
+                            field(ReusableConstants.USER_ID),
+                            field(ReusableConstants.NAME),
+                            field(ReusableConstants.DESCRIPTION),
+                            field(ReusableConstants.CREATED_TIME)
                     )
                     .values(
                             idGenerator.nextId(),
@@ -93,13 +93,13 @@ public class UserController {
                     )
                     .execute();
 
-            jooqContext.insertInto(table(AppConstants.CATEGORY_ENTITY))
+            jooqContext.insertInto(table(ReusableConstants.CATEGORY_ENTITY))
                     .columns(
-                            field(AppConstants.CATEGORY_ID),
-                            field(AppConstants.USER_ID),
-                            field(AppConstants.NAME),
-                            field(AppConstants.DESCRIPTION),
-                            field(AppConstants.CREATED_TIME)
+                            field(ReusableConstants.CATEGORY_ID),
+                            field(ReusableConstants.USER_ID),
+                            field(ReusableConstants.NAME),
+                            field(ReusableConstants.DESCRIPTION),
+                            field(ReusableConstants.CREATED_TIME)
                     )
                     .values(
                             idGenerator.nextId(),
@@ -110,13 +110,13 @@ public class UserController {
                     )
                     .execute();
 
-            jooqContext.insertInto(table(AppConstants.CATEGORY_ENTITY))
+            jooqContext.insertInto(table(ReusableConstants.CATEGORY_ENTITY))
                     .columns(
-                            field(AppConstants.CATEGORY_ID),
-                            field(AppConstants.USER_ID),
-                            field(AppConstants.NAME),
-                            field(AppConstants.DESCRIPTION),
-                            field(AppConstants.CREATED_TIME)
+                            field(ReusableConstants.CATEGORY_ID),
+                            field(ReusableConstants.USER_ID),
+                            field(ReusableConstants.NAME),
+                            field(ReusableConstants.DESCRIPTION),
+                            field(ReusableConstants.CREATED_TIME)
                     )
                     .values(
                             idGenerator.nextId(),
@@ -128,12 +128,12 @@ public class UserController {
                     .execute();
 
             //  populating demo data for payment methods
-            jooqContext.insertInto(table(AppConstants.PAYMENT_METHOD_ENTITY))
+            jooqContext.insertInto(table(ReusableConstants.PAYMENT_METHOD_ENTITY))
                     .columns(
-                            field(AppConstants.PAYMENT_METHOD_ID),
-                            field(AppConstants.USER_ID),
-                            field(AppConstants.TYPE),
-                            field(AppConstants.CREATED_TIME)
+                            field(ReusableConstants.PAYMENT_METHOD_ID),
+                            field(ReusableConstants.USER_ID),
+                            field(ReusableConstants.TYPE),
+                            field(ReusableConstants.CREATED_TIME)
                     )
                     .values(
                             idGenerator.nextId(),
@@ -145,7 +145,7 @@ public class UserController {
 
             return ResponseEntity.ok(new SignUpResponse(true));
         } catch (Exception ex){
-            if(ex.getMessage().contains(SQLConstraint.USER_EMAIL_UK.getKey())){
+            if(ex.getMessage().contains(SQLConstraintErrorConstant.USER_EMAIL_UK.getKey())){
                 throw new FinTrackerException(ErrorConstants.DUPLICATE);
             }
         }

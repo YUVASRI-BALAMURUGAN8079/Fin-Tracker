@@ -5,7 +5,7 @@ import com.tracker.DTO.ExpensesGroupByCategory;
 import com.tracker.entity.Category;
 import com.tracker.entity.ExpenseTransactions;
 import com.tracker.entity.PaymentMethod;
-import com.tracker.error.AppConstants;
+import com.tracker.error.ReusableConstants;
 import com.tracker.error.ErrorConstants;
 import com.tracker.error.FinTrackerException;
 import com.tracker.repo.CategoryRepo;
@@ -43,23 +43,23 @@ public class ExpenseService {
     public ExpenseDTO createExpense(Long userId, Map<String, ?> input){
         var hasCategoryInInput = false;
         Category category = null;
-        if (input.containsKey(AppConstants.CATEGORY_ID)) {
+        if (input.containsKey(ReusableConstants.CATEGORY_ID)) {
             hasCategoryInInput = true;
-            category= categoryRepo.findByUserIdAndCategoryCategoryId(Long.valueOf(input.remove(AppConstants.CATEGORY_ID).toString()),userService.getCurrentUserId(),0L);
-        } else if (input.containsKey(AppConstants.CATEGORY_NAME)) {
+            category= categoryRepo.findByUserIdAndCategoryCategoryId(Long.valueOf(input.remove(ReusableConstants.CATEGORY_ID).toString()),userService.getCurrentUserId(),0L);
+        } else if (input.containsKey(ReusableConstants.CATEGORY_NAME)) {
             hasCategoryInInput = true;
-            category= categoryRepo.findByUserIdAndCategoryName(input.remove(AppConstants.CATEGORY_NAME).toString(),userService.getCurrentUserId(),0L);
+            category= categoryRepo.findByUserIdAndCategoryName(input.remove(ReusableConstants.CATEGORY_NAME).toString(),userService.getCurrentUserId(),0L);
         }
         if(hasCategoryInInput && category == null) throw new FinTrackerException(ErrorConstants.INVALID_INPUT);
 
         var hasPaymentMethodInInput = false;
         PaymentMethod paymentMethod = null;
-        if (input.containsKey(AppConstants.PAYMENT_METHOD_ID)) {
+        if (input.containsKey(ReusableConstants.PAYMENT_METHOD_ID)) {
             hasPaymentMethodInInput = true;
-            paymentMethod= paymentMethodRepo.findByUserIdAndPaymentId(userService.getCurrentUserId(),Long.valueOf(input.remove(AppConstants.PAYMENT_METHOD_ID).toString()),0L);
-        } else if (input.containsKey(AppConstants.PAYMENT_METHOD_TYPE)) {
+            paymentMethod= paymentMethodRepo.findByUserIdAndPaymentId(userService.getCurrentUserId(),Long.valueOf(input.remove(ReusableConstants.PAYMENT_METHOD_ID).toString()),0L);
+        } else if (input.containsKey(ReusableConstants.PAYMENT_METHOD_TYPE)) {
             hasPaymentMethodInInput = true;
-            paymentMethod= paymentMethodRepo.findByUserIdAndPaymentType(userService.getCurrentUserId(),input.remove(AppConstants.PAYMENT_METHOD_TYPE).toString(),0L);
+            paymentMethod= paymentMethodRepo.findByUserIdAndPaymentType(userService.getCurrentUserId(),input.remove(ReusableConstants.PAYMENT_METHOD_TYPE).toString(),0L);
         }
         if(hasPaymentMethodInInput && paymentMethod == null) throw new FinTrackerException(ErrorConstants.INVALID_INPUT);
 
@@ -68,8 +68,8 @@ public class ExpenseService {
         expenseTransactions.setUserId(userId);
         expenseTransactions.setCategory(category);
         expenseTransactions.setPaymentMethod(paymentMethod);
-        expenseTransactions.setAmount(Long.valueOf(input.remove(AppConstants.AMOUNT).toString()));
-        expenseTransactions.setDate(LocalDate.parse(input.remove(AppConstants.DATE).toString()));
+        expenseTransactions.setAmount(Long.valueOf(input.remove(ReusableConstants.AMOUNT).toString()));
+        expenseTransactions.setDate(LocalDate.parse(input.remove(ReusableConstants.DATE).toString()));
 
         return handleDTO(expenseRepo.save(expenseTransactions));
     }
@@ -78,33 +78,33 @@ public class ExpenseService {
         var expense = expenseRepo.findByIdUserId(expenseId,userId);
         if(expense == null) throw  new FinTrackerException(ErrorConstants.INVALID_INPUT);
 
-        if(input.containsKey(AppConstants.CATEGORY_ID) || input.containsKey(AppConstants.CATEGORY_NAME)){
+        if(input.containsKey(ReusableConstants.CATEGORY_ID) || input.containsKey(ReusableConstants.CATEGORY_NAME)){
             Category category = null;
-            if (input.containsKey(AppConstants.CATEGORY_ID)) {
-                category= categoryRepo.findByUserIdAndCategoryCategoryId(Long.valueOf(input.remove(AppConstants.CATEGORY_ID).toString()),userService.getCurrentUserId(),0L);
-            } else if (input.containsKey(AppConstants.CATEGORY_NAME)) {
-                category= categoryRepo.findByUserIdAndCategoryName(input.remove(AppConstants.CATEGORY_NAME).toString(),userService.getCurrentUserId(),0L);
+            if (input.containsKey(ReusableConstants.CATEGORY_ID)) {
+                category= categoryRepo.findByUserIdAndCategoryCategoryId(Long.valueOf(input.remove(ReusableConstants.CATEGORY_ID).toString()),userService.getCurrentUserId(),0L);
+            } else if (input.containsKey(ReusableConstants.CATEGORY_NAME)) {
+                category= categoryRepo.findByUserIdAndCategoryName(input.remove(ReusableConstants.CATEGORY_NAME).toString(),userService.getCurrentUserId(),0L);
             }
             if(category == null) throw new FinTrackerException(ErrorConstants.INVALID_INPUT);
             expense.setCategory(category);
         }
 
-        if(input.containsKey(AppConstants.PAYMENT_METHOD_ID) || input.containsKey(AppConstants.PAYMENT_METHOD_TYPE)){
+        if(input.containsKey(ReusableConstants.PAYMENT_METHOD_ID) || input.containsKey(ReusableConstants.PAYMENT_METHOD_TYPE)){
             PaymentMethod paymentMethod = null;
-            if (input.containsKey(AppConstants.PAYMENT_METHOD_ID)) {
-                paymentMethod= paymentMethodRepo.findByUserIdAndPaymentId(userService.getCurrentUserId(),Long.valueOf(input.remove(AppConstants.PAYMENT_METHOD_ID).toString()),0L);
-            } else if (input.containsKey(AppConstants.PAYMENT_METHOD_TYPE)) {
-                paymentMethod= paymentMethodRepo.findByUserIdAndPaymentType(userService.getCurrentUserId(),input.remove(AppConstants.PAYMENT_METHOD_TYPE).toString(),0L);
+            if (input.containsKey(ReusableConstants.PAYMENT_METHOD_ID)) {
+                paymentMethod= paymentMethodRepo.findByUserIdAndPaymentId(userService.getCurrentUserId(),Long.valueOf(input.remove(ReusableConstants.PAYMENT_METHOD_ID).toString()),0L);
+            } else if (input.containsKey(ReusableConstants.PAYMENT_METHOD_TYPE)) {
+                paymentMethod= paymentMethodRepo.findByUserIdAndPaymentType(userService.getCurrentUserId(),input.remove(ReusableConstants.PAYMENT_METHOD_TYPE).toString(),0L);
             }
             if(paymentMethod == null) throw new FinTrackerException(ErrorConstants.INVALID_INPUT);
             expense.setPaymentMethod(paymentMethod);
         }
 
-        if(input.containsKey(AppConstants.AMOUNT)){
-            expense.setAmount(Long.valueOf(input.get(AppConstants.AMOUNT).toString()));
+        if(input.containsKey(ReusableConstants.AMOUNT)){
+            expense.setAmount(Long.valueOf(input.get(ReusableConstants.AMOUNT).toString()));
         }
-        if(input.containsKey(AppConstants.DATE)){
-            expense.setDate(LocalDate.parse(input.get(AppConstants.DATE).toString()));
+        if(input.containsKey(ReusableConstants.DATE)){
+            expense.setDate(LocalDate.parse(input.get(ReusableConstants.DATE).toString()));
         }
 
         return handleDTO(expenseRepo.save(expense));

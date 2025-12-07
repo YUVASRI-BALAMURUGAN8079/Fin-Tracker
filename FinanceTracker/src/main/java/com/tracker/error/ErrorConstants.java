@@ -2,12 +2,12 @@ package com.tracker.error;
 
 
 public class ErrorConstants {
-    public static final ApiErrorInfo SUCCESS = new ApiErrorInfo(200, "Ok");
-    public static final ApiErrorInfo DUPLICATE = new ApiErrorInfo(201, "Duplicate email id");
-    public static final ApiErrorInfo INVALID_INPUT = new ApiErrorInfo(202, "Invalid Input");
-    public static final ApiErrorInfo INVALID_CREDENTIALS = new ApiErrorInfo(202, "Invalid credentials");
-    public static final ApiErrorInfo SESSION_EXPIRED = new ApiErrorInfo(203, "Duplicate email id");
-    public static final ApiErrorInfo ACCESS_DENIED = new ApiErrorInfo(204, "Access denied");
+    public static final ErrorMessages SUCCESS = new ErrorMessages(200, "Ok");
+    public static final ErrorMessages DUPLICATE = new ErrorMessages(201, "Duplicate email id");
+    public static final ErrorMessages INVALID_INPUT = new ErrorMessages(202, "Invalid Input");
+    public static final ErrorMessages INVALID_CREDENTIALS = new ErrorMessages(202, "Invalid credentials");
+    public static final ErrorMessages SESSION_EXPIRED = new ErrorMessages(203, "Duplicate email id");
+    public static final ErrorMessages ACCESS_DENIED = new ErrorMessages(204, "Access denied");
 }
 
 
