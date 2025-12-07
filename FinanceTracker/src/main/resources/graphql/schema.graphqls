@@ -1,0 +1,71 @@
+type Query{
+    getUser(userId:ID!): User
+    getPaymentMethodList: [PaymentMethod]
+    getCategoryList: [Category]
+    getExpenses:[Expense]
+    getExpensesGroupByCategory:[ExpensesGroupByCategory]
+}
+
+type Mutation{
+    createCategory(input:CategoryInput):Category
+    updateCategory(categoryId:ID, input:CategoryInput):Category
+    deleteCategory(categoryId: ID): ID
+    createPaymentMethod(input:PaymentMethodInput):PaymentMethod
+    updatePaymentMethod(paymentMethodId:ID, input:PaymentMethodInput):PaymentMethod
+    deletePaymentMethod(paymentMethodId: ID): ID
+    createExpense(input:ExpenseInput):Expense
+    updateExpense(expenseId:ID, input:ExpenseInput):Expense
+    deleteExpense(expenseId:ID):ID
+}
+
+type User{
+    userId: ID
+    name: String
+    email: String
+}
+
+type Expense{
+    expenseTransactionsId: ID
+    category: Category
+    paymentMethod: PaymentMethod
+    amount: String
+    date: String
+    description: String
+}
+
+type Category{
+    categoryId: ID
+    name: String
+    description: String
+    monthlyLimit: Int
+}
+
+input CategoryInput {
+    name: String!
+    description: String!
+}
+
+type PaymentMethod{
+    paymentMethodId: ID
+    type: String
+}
+
+input PaymentMethodInput {
+    type: String
+}
+
+input ExpenseInput {
+    categoryId:ID
+    categoryName: String
+    paymentMethodId:ID
+    paymentMethodType: String
+    amount: String
+    date: String
+}
+
+type ExpensesGroupByCategory {
+    category: Category
+    expenses : [Expense]
+    expenseSum: String
+    percentSpent: Int
+}

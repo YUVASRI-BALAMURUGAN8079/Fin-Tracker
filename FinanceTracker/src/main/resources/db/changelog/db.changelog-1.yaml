@@ -1,0 +1,411 @@
+databaseChangeLog:
+  - changeSet:
+      id: CT-User
+      author: yuvasri.kb
+      changes:
+        - createTable:
+            tableName: User
+            columns:
+              - column:
+                  name: userId
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: isActive
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: createdTime
+                  type: timestamp(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updatedTime
+                  type: timestamp(3)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: CT-UserSession
+      author: yuvasri
+      changes:
+        - createTable:
+            tableName: UserSession
+            columns:
+              - column:
+                  name: sessionId
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: userId
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_session_user
+                    references: User(userId)
+              - column:
+                  name: csrfToken
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: createdTime
+                  type: timestamp(3)
+              - column:
+                  name: expiresAt
+                  type: timestamp(3)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: CT-Category
+      author: yuvasri
+      changes:
+        - createTable:
+            tableName: Category
+            columns:
+              - column:
+                  name: categoryId
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: userId
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_category_user
+                    references: User(userId)
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: createdTime
+                  type: timestamp(3)
+              - column:
+                  name: updatedTime
+                  type: timestamp(3)
+
+  - changeSet:
+      id: CT-PaymentMethod
+      author: yuvasri
+      changes:
+        - createTable:
+            tableName: PaymentMethod
+            columns:
+              - column:
+                  name: paymentMethodId
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: userId
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_paymentMethod_user
+                    references: User(userId)
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: createdTime
+                  type: timestamp(3)
+              - column:
+                  name: updatedTime
+                  type: timestamp(3)
+
+  - changeSet:
+      id: CT-ExpenseTransactions
+      author: yuvasri
+      changes:
+        - createTable:
+            tableName: ExpenseTransactions
+            columns:
+              - column:
+                  name: expenseTransactionsId
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: userId
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_expenseTransactions_user
+                    references: User(userId)
+              - column:
+                  name: categoryId
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_category_expenseTransactions
+                    references: Category(categoryId)
+              - column:
+                  name: paymentMethodId
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_expenseTransactions_paymentMethod
+                    references: PaymentMethod(paymentMethodId)
+              - column:
+                  name: amount
+                  type: bigint
+              - column:
+                  name: date
+                  type: timestamp(3)
+                  defaultValueComputed: CURRENT_TIMESTAMP(3)
+
+  - changeSet:
+      id: UC-Category
+      author: yuvasri.kb
+      changes:
+        - addUniqueConstraint:
+            tableName: Category
+            columnNames: name,userId
+            constraintName: uc_category_name_userId
+
+  - changeSet:
+      id: AC-Category-deletedTime
+      author: yuvasri.kb
+      changes:
+        - addColumn:
+            tableName: Category
+            columns:
+              - column:
+                  name: deletedTime
+                  type: bigint
+                  defaultValueNumeric: '0'
+
+  - changeSet:
+      id: AC-PaymentMethod-deletedTime
+      author: yuvasri.kb
+      changes:
+        - addColumn:
+            tableName: PaymentMethod
+            columns:
+              - column:
+                  name: deletedTime
+                  type: bigint
+                  defaultValueNumeric: '0'
+
+  - changeSet:
+      id: AC-User-timeZone
+      author: yuvasri.kb
+      changes:
+        - addColumn:
+            tableName: User
+            columns:
+              - column:
+                  name: timeZone
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: UC-PaymentMethod-type
+      author: yuvasri.kb
+      changes:
+        - addUniqueConstraint:
+            tableName: PaymentMethod
+            columnNames: userId,type
+            constraintName: uc_payment_method_type_userId
+
+  - changeSet:
+      id: UD-ExpenseTransactions-Date
+      author: yuvasri.kb
+      changes:
+        - modifyDataType:
+            tableName: ExpenseTransactions
+            columnName: date
+            newDataType: DATE
+        - addDefaultValue:
+            tableName: ExpenseTransactions
+            columnName: date
+            defaultValueComputed: CURRENT_DATE
+
+  - changeSet:
+      id: DFK-PaymentMethod-User
+      author: susaiarul.s
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: PaymentMethod
+            constraintName: fk_paymentMethod_user
+
+  - changeSet:
+      id: AFK-PaymentMethod-User
+      author: yuvasri.kb
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: PaymentMethod
+            baseColumnNames: userId
+            constraintName: fk_paymentMethod_user
+            referencedTableName: User
+            referencedColumnNames: userId
+            onDelete: CASCADE
+
+  - changeSet:
+      id: DFK-Category-User
+      author: yuvasri.kb
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: Category
+            constraintName: fk_user_category_user
+
+  - changeSet:
+      id: AFK-Category-User
+      author: yuvasri.kb
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: Category
+            baseColumnNames: userId
+            constraintName: fk_category_user
+            referencedTableName: User
+            referencedColumnNames: userId
+            onDelete: CASCADE
+
+  - changeSet:
+      id: DFK-ExpenseTransactions-User
+      author: yuvasri.kb
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: ExpenseTransactions
+            constraintName: fk_user_expenseTransactions_user
+
+  - changeSet:
+      id: AFK-ExpenseTransactions-User
+      author: yuvasri.kb
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: ExpenseTransactions
+            baseColumnNames: userId
+            constraintName: fk_expenseTransactions_user
+            referencedTableName: User
+            referencedColumnNames: userId
+            onDelete: CASCADE
+
+  - changeSet:
+      id: Remove-null-constraints-ExpenseTransactions
+      author: yuvasri.kb
+      changes:
+        - dropNotNullConstraint:
+            tableName: ExpenseTransactions
+            columnName: categoryId
+            columnDataType: bigint
+        - dropNotNullConstraint:
+            tableName: ExpenseTransactions
+            columnName: paymentMethodId
+            columnDataType: bigint
+
+  - changeSet:
+      id: DFK-ExpenseTransactions-Category
+      author: yuvasri.kb
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: ExpenseTransactions
+            constraintName: fk_category_expenseTransactions
+
+  - changeSet:
+      id: AFK-ExpenseTransactions-Category
+      author: yuvasri.kb
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: ExpenseTransactions
+            baseColumnNames: categoryId
+            constraintName: fk_expenseTransactions_category
+            referencedTableName: Category
+            referencedColumnNames: categoryId
+            onDelete: SET NULL
+
+  - changeSet:
+      id: DFK-ExpenseTransactions-PaymentMethod
+      author: yuvasri.kb
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: ExpenseTransactions
+            constraintName: fk_expenseTransactions_paymentMethod
+
+  - changeSet:
+      id: AFK-ExpenseTransactions-PaymentMethod
+      author: yuvasri.kb
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: ExpenseTransactions
+            baseColumnNames: paymentMethodId
+            constraintName: fk_expenseTransactions_paymentMethod
+            referencedTableName: PaymentMethod
+            referencedColumnNames: paymentMethodId
+            onDelete: SET NULL
+
+  - changeSet:
+      id: DFK-UserSession-User
+      author: yuvasri.kb
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: UserSession
+            constraintName: fk_user_session_user
+
+  - changeSet:
+      id: AFK-UserSession-User
+      author: yuvasri.kb
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: UserSession
+            baseColumnNames: userId
+            constraintName: fk_userSession_user
+            referencedTableName: User
+            referencedColumnNames: userId
+            onDelete: CASCADE
+
+  - changeSet:
+      id: AC-Category-currentMonthlyLimit
+      author: yuvasri.kb
+      changes:
+        - addColumn:
+            tableName: Category
+            columns:
+              - column:
+                  name: currentMonthlyLimit
+                  type: bigint
+                  defaultValueNumeric: '0'
+
+  - changeSet:
+      id: AC-ExpenseTransactions-description
+      author: yuvasri.kb
+      changes:
+        - addColumn:
+            tableName: ExpenseTransactions
+            columns:
+              - column:
+                  name: description
+                  type: VARCHAR(30)
