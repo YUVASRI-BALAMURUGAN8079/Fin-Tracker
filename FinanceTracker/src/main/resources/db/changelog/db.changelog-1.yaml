@@ -409,3 +409,259 @@ databaseChangeLog:
               - column:
                   name: description
                   type: VARCHAR(30)
+  - changeSet:
+      id: CT-Bills
+      author: yuvasri.kb
+      changes:
+        - createTable:
+            tableName: Bills
+            columns:
+              - column:
+                  name: billId
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: userId
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: categoryId
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: recurring
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: numeric
+                  constraints:
+                    nullable: false
+              - column:
+                  name: frequency
+                  type: enum('NONE','WEEKLY','MONTHLY','QUARTERLY','HALF-YEARLY','YEARLY')
+                  constraints:
+                    nullable: false
+              - column:
+                  name: dueDate
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reminderBeforeDays
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
+                  name: autoCreateExpense
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: createdTime
+                  type: timestamp(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updatedTime
+                  type: timestamp(3)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: deletedTime
+                  type: bigint
+                  defaultValueNumeric: 0
+        - addForeignKeyConstraint:
+            baseTableName: Bills
+            baseColumnNames: userId
+            referencedTableName: User
+            referencedColumnNames: userId
+            constraintName: fk_bills_user
+        - addForeignKeyConstraint:
+            baseTableName: Bills
+            baseColumnNames: categoryId
+            referencedTableName: Category
+            referencedColumnNames: categoryId
+            constraintName: fk_bills_category
+
+  - changeSet:
+      id: AC-ExpenseTransaction-billId
+      author: yuvasri.kb
+      changes:
+        - addColumn:
+            tableName: ExpenseTransactions
+            columns:
+              - column:
+                  name: billId
+                  type: bigint
+
+  - changeSet:
+      id: AFK-ExpenseTransaction-Bill
+      author: yuvasri.kb
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: ExpenseTransactions
+            baseColumnNames: billId
+            constraintName: fk_expenseTransactions_bill
+            referencedTableName: Bills
+            referencedColumnNames: billId
+
+  - changeSet:
+      id: AC-Bills
+      author: yuvasri.kb
+      changes:
+        - addColumn:
+            tableName: Bills
+            columns:
+              - column:
+                  name: paid
+                  type: Boolean
+
+  - changeSet:
+      id: CT-SavingsGoal
+      author: yuvasri.kb
+      changes:
+        - createTable:
+            tableName: SavingsGoal
+            columns:
+              - column:
+                  name: goalId
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: userId
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: targetAmount
+                  type: numeric
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currentAmount
+                  type: numeric
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: targetDate
+                  type: date
+                  constraints:
+                    nullable: true
+              - column:
+                  name: createdTime
+                  type: timestamp(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updatedTime
+                  type: timestamp(3)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: deletedTime
+                  type: bigint
+                  defaultValueNumeric: 0
+        - addForeignKeyConstraint:
+            baseTableName: SavingsGoal
+            baseColumnNames: userId
+            referencedTableName: User
+            referencedColumnNames: userId
+            constraintName: fk_savingsGoal_user
+
+  - changeSet:
+      id: CT-SavingsGoalTransaction
+      author: yuvasri.kb
+      changes:
+        - createTable:
+            tableName: SavingsGoalTransaction
+            columns:
+              - column:
+                  name: txnId
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: goalId
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: numeric
+                  constraints:
+                    nullable: false
+              - column:
+                  name: txnDate
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: note
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: deletedTime
+                  type: bigint
+                  defaultValueNumeric: 0
+        - addForeignKeyConstraint:
+            baseTableName: SavingsGoalTransaction
+            baseColumnNames: goalId
+            referencedTableName: SavingsGoal
+            referencedColumnNames: goalId
+            constraintName: fk_savingsGoalTransaction_savingsGoal
+
+
+  - changeSet:
+      id: AC-SavingsGoalTransaction-userId
+      author: yuvasri.kb
+      changes:
+        - addColumn:
+            tableName: SavingsGoalTransaction
+            columns:
+              - column:
+                  name: userId
+                  type: bigint
+
+  - changeSet:
+      id: AFK-SavingsGoalTransaction-User
+      author: yuvasri.kb
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: SavingsGoalTransaction
+            baseColumnNames: userId
+            constraintName: fk_SavingsGoalTransaction_User
+            referencedTableName: User
+            referencedColumnNames: userId
+
+  - changeSet:
+      id: UC-Goal-Name-User
+      author: yuvasri.kb
+      changes:
+        - addUniqueConstraint:
+            tableName: SavingsGoal
+            columnNames: name,userId
+            constraintName: uc_savingsGoal_name_userId

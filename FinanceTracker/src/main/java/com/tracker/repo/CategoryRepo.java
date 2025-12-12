@@ -24,7 +24,7 @@ public interface CategoryRepo extends JpaRepository<Category, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Category c SET c.deletedTime = :deletedTime WHERE c.categoryId = :categoryId")
+    @Query("UPDATE Category c SET c.deletedTime = :deletedTime WHERE c.categoryId = :categoryId AND c.userId = :userId")
     void softDeleteCategory(@Param("userId") Long userId,@Param("categoryId") Long categoryId, @Param("deletedTime") Long deletedTime);
 
 }

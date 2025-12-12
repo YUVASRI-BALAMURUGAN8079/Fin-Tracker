@@ -14,14 +14,8 @@ import java.util.Map;
 
 @Controller
 public class CategoryResolver {
-    private final CategoryService categoryService;
-    private final UserService userService;
-
-    @Autowired
-    public CategoryResolver(CategoryService categoryService, UserService userService){
-        this.categoryService = categoryService;
-        this.userService = userService;
-    }
+    @Autowired private CategoryService categoryService;
+    @Autowired private UserService userService;
 
     @QueryMapping(name = "getCategoryList")
     public List<CategoryDTO> getCategoryList() {

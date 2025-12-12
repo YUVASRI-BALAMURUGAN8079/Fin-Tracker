@@ -9,7 +9,7 @@ public record ExpenseDTO(
         Long expenseTransactionsId,
         Category category,
         PaymentMethod paymentMethod,
-        Long amount,
+        Double amount,
         String description,
         LocalDate date
 ) { }

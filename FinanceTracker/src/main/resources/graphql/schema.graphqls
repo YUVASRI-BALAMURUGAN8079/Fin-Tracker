@@ -4,6 +4,11 @@ type Query{
     getCategoryList: [Category]
     getExpenses:[Expense]
     getExpensesGroupByCategory:[ExpensesGroupByCategory]
+    getExpensesGroupByBill:[ExpensesGroupByBill]
+    getExpensesGroupByPaymentMethod:[ExpensesGroupByPaymentMethod]
+    getBills:[Bill]
+    getGoals: [SavingsGoal]
+    getGoalsAndTransactions(goalId:ID):SavingsGoal
 }
 
 type Mutation{
@@ -16,6 +21,60 @@ type Mutation{
     createExpense(input:ExpenseInput):Expense
     updateExpense(expenseId:ID, input:ExpenseInput):Expense
     deleteExpense(expenseId:ID):ID
+    addBill(input:BillInput):Bill
+    updateBill(billId:ID, input:BillInput):Bill
+    softDeleteBill(billId: ID!): ID
+    markBillAsPaid(input:BillTransactionInput):Bill
+    createSavingsGoal(input:SavingsGoalInput):SavingsGoal
+    updateSavingsGoal(goalId:ID!,input:SavingsGoalInput):SavingsGoal
+    softDeleteSavingsGoal(goalId:ID!):ID
+    addSavingsGoalTransaction(goalId:ID,input:SavingsTransactionInput):SavingsGoalTransaction
+    updateSavingsGoalTransaction(txnId: ID, input:SavingsTransactionInput):SavingsGoalTransaction
+    softDeleteSavingsGoalTransaction(txnId:ID):ID
+}
+
+input BillTransactionInput{
+    billId: ID!
+    amount: String
+    paidDate: String
+    paymentMethodId: ID
+}
+
+input SavingsGoalInput{
+    name: String
+    targetAmount: String
+    targetDate: String
+}
+
+type SavingsGoal{
+    goalId: ID
+    name: String
+    targetAmount: String
+    currentAmount: String
+    targetDate: String
+    transactions: [SavingsGoalTransaction]
+}
+
+type SavingsGoalTransaction {
+    txnId: ID
+    amount:String
+    txnDate: String
+    note: String
+    savingsGoal: SavingsGoal
+}
+
+input SavingsTransactionInput{
+    amount:String
+    date: String
+    note: String
+}
+
+type BillTransaction{
+    billTransactionId: ID
+    amount: String
+    transactionDate: String
+    paymentMethod: PaymentMethod
+    bill: Bill
 }
 
 type User{
@@ -31,6 +90,7 @@ type Expense{
     amount: String
     date: String
     description: String
+    bill: Bill
 }
 
 type Category{
@@ -68,4 +128,43 @@ type ExpensesGroupByCategory {
     expenses : [Expense]
     expenseSum: String
     percentSpent: Int
+}
+
+type ExpensesGroupByBill{
+    bill: Bill
+    expenses : [Expense]
+    expenseSum: String
+}
+
+type ExpensesGroupByPaymentMethod{
+    paymentMethod: PaymentMethod
+    expenses : [Expense]
+    expenseSum: String
+}
+
+input BillInput {
+    categoryId: ID
+    categoryName: String
+    name: String
+    amount: String
+    isRecurring: Boolean
+    dueDate: String
+    reminderBeforeDays: Int
+    autoCreateExpense: Boolean
+    frequency: String
+}
+
+type Bill{
+    billId: ID
+    category: Category
+    name: String
+    amount: String
+    isRecurring: Boolean,
+    dueDate: String
+    reminderBeforeDays: Int
+    autoCreateExpense: Boolean
+    frequency: String
+    paid: Boolean
+    expenses: [Expense]
+    reminderDate:String
 }

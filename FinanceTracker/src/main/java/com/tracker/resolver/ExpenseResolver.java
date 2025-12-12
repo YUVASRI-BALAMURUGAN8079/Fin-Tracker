@@ -1,7 +1,9 @@
 package com.tracker.resolver;
 
 import com.tracker.DTO.ExpenseDTO;
+import com.tracker.DTO.ExpensesGroupByBill;
 import com.tracker.DTO.ExpensesGroupByCategory;
+import com.tracker.DTO.ExpensesGroupByPaymentMethod;
 import com.tracker.service.ExpenseService;
 import com.tracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,16 @@ public class ExpenseResolver {
     @QueryMapping
     public List<ExpensesGroupByCategory> getExpensesGroupByCategory(){
         return expenseService.getExpensesGroupByCategory();
+    }
+
+    @QueryMapping
+    public List<ExpensesGroupByBill> getExpensesGroupByBill(){
+        return expenseService.getExpensesGroupByBill();
+    }
+
+    @QueryMapping
+    public List<ExpensesGroupByPaymentMethod> getExpensesGroupByPaymentMethod(){
+        return expenseService.getExpensesGroupByPaymentMethod();
     }
 
 }

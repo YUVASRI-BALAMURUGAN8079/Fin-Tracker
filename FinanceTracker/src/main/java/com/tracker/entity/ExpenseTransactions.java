@@ -5,6 +5,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,11 +34,16 @@ public class ExpenseTransactions {
     private PaymentMethod paymentMethod = null;
 
     @Column(name = "amount")
-    private Long amount;
+    private Double amount;
 
     @Column(name = "date")
     private LocalDate date;
 
     @Column(name = "description")
     private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "billId")
+    private Bills bill;
+
 }

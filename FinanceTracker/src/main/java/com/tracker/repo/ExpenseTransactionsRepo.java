@@ -4,6 +4,7 @@ import com.tracker.entity.ExpenseTransactions;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,20 @@ public interface ExpenseTransactionsRepo extends JpaRepository<ExpenseTransactio
 
     @Query(" SELECT e FROM ExpenseTransactions e WHERE e.userId = :userId AND MONTH(e.date) = :month AND YEAR(e.date) = :year ORDER BY e.date DESC")
     List<ExpenseTransactions> findByUserIdAndMonth(Long userId, int month, int year);
+
+    @Query("""
+        SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END
+        FROM ExpenseTransactions e
+        WHERE e.userId = :userId
+          AND e.bill.id = :billId
+          AND e.date BETWEEN :start AND :end
+        """)
+    boolean existsByUserIdAndBillIdAndDateBetween(
+            @Param("userId") Long userId,
+            @Param("billId") Long billId,
+            @Param("start") LocalDate start,
+            @Param("end") LocalDate end
+    );
 
 
 }

@@ -1,67 +1,45 @@
 package com.tracker.service;
 
 import com.tracker.entity.UserSession;
+import com.tracker.error.ErrorConstants;
+import com.tracker.error.FinTrackerException;
 import com.tracker.repo.UserSessionRepo;
+import net.mguenther.idem.flake.Flake64L;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SessionService {
-    @Autowired
-    private UserSessionRepo userSessionRepository;
+    @Autowired private UserSessionRepo userSessionRepository;
+    @Autowired private Flake64L idGenerator;
 
-    public Long getUserIdFromSession(String sessionId) {
-        if (sessionId == null) return null;
-
-        Long sessionIdLong =  Long.parseLong(sessionId);
-
-        Optional<UserSession> sessionOpt = userSessionRepository.findBySessionId(sessionIdLong);
-
-        if (sessionOpt.isEmpty()) return null;
-
-        UserSession session = sessionOpt.get();
-
-
-        if (session.getExpiresAt().isBefore(LocalDateTime.now(ZoneOffset.UTC))) {
-            userSessionRepository.deleteBySessionId(sessionIdLong);
-            return null;
-        }
-
-        return session.getUserId();
-    }
-
-    public String createSession(Long userId) {
-        long sessionId = generateSessionId();
+    public UserSession createSession(Long userId) {
         UserSession session = new UserSession();
-        session.setSessionId(sessionId);
+        session.setSessionId(idGenerator.nextId());
         session.setUserId(userId);
-        session.setCsrfToken(generateCsrfToken());
+        session.setCsrfToken(UUID.randomUUID().toString());
         session.setCreatedTime(LocalDateTime.now(ZoneOffset.UTC));
         session.setExpiresAt(LocalDateTime.now(ZoneOffset.UTC).plusHours(24));
 
-        userSessionRepository.save(session);
-
-        return String.valueOf(sessionId);
+        return userSessionRepository.save(session);
     }
 
-    public void deleteSession(String sessionId) {
-        try {
-            Long id = Long.parseLong(sessionId);
-            userSessionRepository.deleteBySessionId(id);
-        } catch (NumberFormatException ignored) {
+    public UserSession validateSession(String sessionId) {
+        if (sessionId == null) return null;
+        long sid= Long.parseLong(sessionId);
+        UserSession session = userSessionRepository.findBySessionId(sid).orElse(null);
+        if (session == null) return null;
+
+        if (session.getExpiresAt().isBefore(LocalDateTime.now(ZoneOffset.UTC))) {
+            userSessionRepository.deleteBySessionId(sid);
+            throw new FinTrackerException(ErrorConstants.SESSION_EXPIRED);
         }
+
+        return session;
     }
 
-    private long generateSessionId() {
-        return Math.abs(new java.security.SecureRandom().nextLong());
-    }
-
-    private String generateCsrfToken() {
-        return java.util.UUID.randomUUID().toString();
-    }
 }

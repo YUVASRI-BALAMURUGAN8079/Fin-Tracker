@@ -7,6 +7,6 @@ import java.util.List;
 public record ExpensesGroupByCategory(
         Category category,
         List<ExpenseDTO> expenses,
-        Long expenseSum,
-        Long percentSpent
+        Double expenseSum,
+        Double percentSpent
 ) { }

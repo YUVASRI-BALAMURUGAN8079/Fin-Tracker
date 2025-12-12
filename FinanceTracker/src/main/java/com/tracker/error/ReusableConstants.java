@@ -28,4 +28,21 @@ public class ReusableConstants {
     public static final String EXPENSE_TRANSACTION_ID = "expenseTransactionId";
     public static final String AMOUNT = "amount";
     public static final String DATE = "date";
+    public static final String NOTE = "note";
+    public static final String TARGET_AMOUNT="targetAmount";
+    public static final String TARGET_DATE="targetDate";
+    public static final String CURRENT_AMOUNT= "currentAmount";
+
+
+    public static final String BILL_ID = "billId";
+    public static final String DUE_DATE = "dueDate";
+    public static final String IS_RECURRING = "isRecurring";
+    public static final String NEXT_DUE_DATE = "nextDueDate";
+    public static final String REMAINDER_BEFORE_DAYS= "reminderBeforeDays";
+    public static final String LAST_PAID_DATE="lastPaidDate";
+    public static final String AUTO_CREATE_EXPENSE ="autoCreateExpense";
+    public static final String RECURRENCE_TYPE = "recurrenceTye";
+    public static final String FREQUENCY = "frequency";
+
+    public static final String PAID_DATE = "paidDate";
 }

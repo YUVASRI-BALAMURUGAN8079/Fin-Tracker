@@ -13,8 +13,6 @@ public class UserContext {
 
     public static Long getUserId() { return currentUser.get(); }
 
-    public static String getTimeZone() {return currentUserTimeZone.get(); }
-
     public static void clear() {
         currentUser.remove();
     }
